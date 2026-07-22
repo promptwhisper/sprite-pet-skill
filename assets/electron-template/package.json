@@ -1,0 +1,17 @@
+{
+  "name": "animated-desktop-pet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An AI-assisted animated desktop pet",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check main.js && node --check preload.js && node --check renderer.js",
+    "package:mac": "electron-packager . AnimatedDesktopPet --platform=darwin --arch=arm64 --out=dist --overwrite --asar --ignore='^/dist$'",
+    "package:win": "electron-packager . AnimatedDesktopPet --platform=win32 --arch=x64 --out=dist --overwrite --asar --ignore='^/dist$'"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.0.3",
+    "electron": "43.2.0"
+  }
+}

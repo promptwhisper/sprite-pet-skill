@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sprite Pet Skill"
+  short_description: "通用动画桌宠：生成、修复、交互、校准、打包并立即运行"
+  default_prompt: "Use $sprite-pet-skill to create or repair a scale-consistent, identity-locked, interactive desktop pet, then package and launch it."

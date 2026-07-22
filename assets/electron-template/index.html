@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'" />
+    <title>Animated Desktop Pet</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="stage" aria-label="Animated desktop pet">
+      <div id="shadow" aria-hidden="true"></div>
+      <img id="pet" alt="Animated desktop pet" draggable="false" />
+      <div id="catch-burst" aria-hidden="true">✦ ✧ ✦</div>
+      <div id="error">Missing animation assets</div>
+    </main>
+    <script src="renderer.js"></script>
+  </body>
+</html>

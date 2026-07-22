@@ -1,0 +1,106 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+#stage {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: end center;
+}
+
+#pet {
+  position: relative;
+  z-index: 2;
+  width: 252px;
+  height: 210px;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 8px 8px rgb(0 0 0 / 22%));
+  transform: scale(var(--display-scale, 1));
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+
+#stage[data-direction="left"] #pet {
+  transform: scaleX(-1) scale(var(--display-scale, 1));
+}
+
+#stage[data-pose="caught"] #pet {
+  animation: celebrate 0.42s cubic-bezier(0.22, 1.55, 0.42, 1) infinite alternate;
+}
+
+#stage[data-direction="left"][data-pose="caught"] #pet {
+  animation-name: celebrate-left;
+}
+
+#shadow {
+  position: absolute;
+  z-index: 1;
+  bottom: 9px;
+  width: 142px;
+  height: 21px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(0 0 0 / 20%), transparent 68%);
+  filter: blur(4px);
+}
+
+#catch-burst {
+  position: absolute;
+  z-index: 3;
+  top: 20px;
+  right: 20px;
+  color: #ffb320;
+  font-size: 28px;
+  opacity: 0;
+}
+
+#catch-burst.visible {
+  animation: burst 0.78s ease-out;
+}
+
+#error {
+  display: none;
+  padding: 6px 10px;
+  color: white;
+  background: #b42318;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+#stage[data-error="true"] #error {
+  display: block;
+}
+
+@keyframes celebrate {
+  from { transform: translateY(3px) scale(calc(var(--display-scale, 1) * 0.96)); }
+  to { transform: translateY(-7px) scale(calc(var(--display-scale, 1) * 1.04)); }
+}
+
+@keyframes celebrate-left {
+  from { transform: translateY(3px) scaleX(-1) scale(calc(var(--display-scale, 1) * 0.96)); }
+  to { transform: translateY(-7px) scaleX(-1) scale(calc(var(--display-scale, 1) * 1.04)); }
+}
+
+@keyframes burst {
+  0% { opacity: 0; transform: scale(0.2) rotate(-18deg); }
+  28% { opacity: 1; transform: scale(1.15) rotate(4deg); }
+  100% { opacity: 0; transform: scale(1.5) rotate(14deg); }
+}
