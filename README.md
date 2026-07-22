@@ -1,123 +1,125 @@
 # Sprite Pet Skill
 
+English | [简体中文](README.zh-CN.md)
+
 Turn any character image into a polished, animated, interactive desktop pet.
 
-把一张角色图变成会待机、行走、奔跑、追逐鼠标并能互动的桌面宠物。这个仓库不只提供提示词，还包含动作设计、精灵图处理、质量校验、Electron 运行时、打包和启动的完整工作流。
+This repository goes beyond prompting. It provides an end-to-end workflow for motion design, sprite processing, quality validation, an Electron desktop runtime, packaging, and launch verification.
 
-## 它解决什么
+## What it solves
 
-生成桌宠最难的通常不是“让角色动起来”，而是让所有动作看起来仍然是同一个角色，并且在桌面上稳定运行。Sprite Pet Skill 针对这些常见问题提供了可复用的处理与验证：
+The hard part of generating a desktop pet is not merely making a character move. Every action must still look like the same character, remain visually consistent, and behave predictably on the desktop. Sprite Pet Skill addresses common failures such as:
 
-- Idle、Walk、Run 切换时体型忽大忽小；
-- 睡觉、受伤或蜷缩动作出现身份漂移；
-- 透明图里残留尾巴碎片、网格线或裁切边缘；
-- 宠物在鼠标附近反复扑跳和抖动；
-- 长按逗宠时切头旋转，造成脖子断裂；
-- 只生成素材，却没有真正打包并运行桌宠。
+- Idle, walk, and run animations changing apparent character size;
+- identity drift in sleep, hurt, death, or curled poses;
+- detached tail fragments, grid lines, or clipped silhouettes in transparent frames;
+- repeated pouncing and jitter when the pointer stops moving;
+- broken necks caused by cutting and rotating a head from a flat image;
+- delivering sprite assets without packaging and launching the actual pet.
 
-## 功能
+## Features
 
-- 五种运动骨架：`biped`、`quadruped`、`serpent`、`flyer`、`blob`；
-- 基于身份锚点和姿势图生成独立的 4×2 八帧动作表；
-- 洋红背景抠除、去色溢、落地对齐、中心校正与透明图导出；
-- 身份一致性、重复帧、透明碎片、边缘安全区和循环质量检查；
-- Idle / Walk / Run 跨动作比例审计及 `displayScale` 校准；
-- 完整八方向长按注视方案，避免平面图片“切头旋转”；
-- 带透明点击穿透、菜单、多屏约束和防抖追逐逻辑的 Electron 模板；
-- macOS / Windows 结构化打包以及当前系统启动验证。
+- Five motion-aware body plans: `biped`, `quadruped`, `serpent`, `flyer`, and `blob`;
+- identity anchors and pose guides for separate 4×2, eight-frame action sheets;
+- magenta keying, despill, grounding, centering, and transparent frame export;
+- checks for identity drift, duplicate frames, detached fragments, unsafe gutters, and weak loops;
+- cross-action scale auditing for idle, walk, and run with persistent `displayScale` calibration;
+- complete eight-direction long-press gaze art that avoids fake head rotation;
+- an Electron template with click-through transparency, menus, display clamping, and stable pointer-following behavior;
+- structured macOS and Windows packaging with current-OS launch verification.
 
-## 安装
+## Installation
 
-把仓库克隆到你的 AI Agent 能发现 `SKILL.md` 的技能目录中：
+Clone the repository into a skills directory where your AI agent can discover `SKILL.md`:
 
 ```bash
 git clone https://github.com/promptwhisper/sprite-pet-skill.git \
   <skills-directory>/sprite-pet-skill
 ```
 
-安装图像处理依赖：
+Install the image-processing dependency:
 
 ```bash
 python3 -m pip install -r \
   <skills-directory>/sprite-pet-skill/scripts/requirements.txt
 ```
 
-不同 Agent 的技能目录和调用方式可能不同。如果宿主支持显式技能调用，可以使用 `$sprite-pet-skill`；否则直接描述桌宠制作任务即可。
+Skill directories and invocation syntax vary by host. If your host supports explicit skill calls, invoke `$sprite-pet-skill`; otherwise describe the desktop-pet task in natural language.
 
-核心工作流只依赖 `SKILL.md`、`scripts/`、`references/` 和 `assets/`，不绑定特定 Agent。`agents/openai.yaml` 只是可选的宿主界面元数据，不影响其他环境使用。
+The core workflow uses only `SKILL.md`, `scripts/`, `references/`, and `assets/`, so it is not tied to a specific agent. `agents/openai.yaml` is optional host UI metadata and does not affect use in other environments.
 
-## 使用示例
+## Example prompts
 
 ```text
-使用 $sprite-pet-skill，把这张猫咪图片做成会待机、行走、奔跑和追逐鼠标的桌宠，完成后直接运行。
+Use $sprite-pet-skill to turn this cat image into a desktop pet with idle, walk, run, and pointer-chasing animations. Package and launch it when finished.
 ```
 
 ```text
-修复这个桌宠：Idle 比走路大、跑步比走路小，而且鼠标停住后宠物会反复扑跳。
+Repair this desktop pet: idle is larger than walk, run is smaller than walk, and the pet repeatedly pounces when the pointer stays still.
 ```
 
 ```text
-长按桌宠时让它固定在原地，头部自然朝鼠标的八个方向转动；不要切下头部旋转。
+While I long-press the pet, freeze it in place and make its head naturally face the pointer in eight directions. Do not cut out and rotate the head.
 ```
 
 ```text
 Use $sprite-pet-skill to turn this dragon image into a scale-consistent desktop pet with idle, walk, run, chase, and eight-direction long-press gaze interactions. Package and launch it.
 ```
 
-## 工作流
+## Workflow
 
 ```text
-角色图片 / 角色概念
-        ↓
-身份锚点 + 身体类型选择
-        ↓
-动作姿势图 + 独立八帧动作表
-        ↓
-透明化、对齐、比例归一和碎片处理
-        ↓
-跨动作审计 + 人工播放检查
-        ↓
-Electron 桌宠运行时
-        ↓
-打包、验证并启动
+Character image or concept
+          ↓
+Identity anchor + body-plan selection
+          ↓
+Pose guides + separate eight-frame action sheets
+          ↓
+Transparency, alignment, scale normalization, fragment handling
+          ↓
+Cross-action audit + visual playback review
+          ↓
+Electron desktop-pet runtime
+          ↓
+Package, validate, and launch
 ```
 
-详细执行规范位于 [SKILL.md](SKILL.md)。交互模型见 [pointer-interactions.md](references/pointer-interactions.md)，Electron 行为约束见 [electron-runtime.md](references/electron-runtime.md)。
+See [SKILL.md](SKILL.md) for the complete operating procedure. See [pointer-interactions.md](references/pointer-interactions.md) for the interaction model and [electron-runtime.md](references/electron-runtime.md) for desktop runtime constraints.
 
-## 内置工具
+## Included tools
 
-| 工具 | 用途 |
+| Tool | Purpose |
 | --- | --- |
-| `prepare_character_anchor.py` | 将角色图规范为稳定的身份锚点 |
-| `generate_pose_guides.py` | 为不同身体类型和动作生成姿势图 |
-| `process_sprite_sheets.py` | 处理、对齐并导出动作帧和 manifest |
-| `validate_animations.py` | 检测重复帧、裁切、碎片和比例漂移 |
-| `audit_sprite_set.py` | 审计跨动作体型并写入显示比例 |
-| `export_sprite_bundle.py` | 导出帧、网格图、条带图、ZIP 和提示词 |
-| `scaffold_electron_pet.py` | 创建透明 Electron 桌宠工程 |
-| `launch_desktop_pet.py` | 启动当前系统最新的可用构建 |
+| `prepare_character_anchor.py` | Normalize a character image into a stable identity anchor |
+| `generate_pose_guides.py` | Generate pose guides for each body plan and action |
+| `process_sprite_sheets.py` | Process, align, and export animation frames and manifests |
+| `validate_animations.py` | Detect duplicates, clipping, fragments, and scale drift |
+| `audit_sprite_set.py` | Audit cross-action scale and persist display calibration |
+| `export_sprite_bundle.py` | Export frames, grids, strips, ZIP files, and prompts |
+| `scaffold_electron_pet.py` | Create a transparent Electron desktop-pet project |
+| `launch_desktop_pet.py` | Launch the newest viable build for the current OS |
 
-查看命令参数：
+Inspect any command before running it:
 
 ```bash
 python3 scripts/<tool-name>.py --help
 ```
 
-## 设计原则
+## Design principles
 
-1. 角色身份优先于动作夸张程度。
-2. 相同画布尺寸不等于相同视觉体型，必须检查真实轮廓和视觉质量。
-3. 极小透明碎片可以自动清理；可能属于尾巴、耳朵、翅膀或肢体的部分必须重新生成。
-4. 平面 PNG 的方向跟随使用完整角色帧；只有真正带遮挡、蒙版和枢轴的骨骼素材才允许单独旋转头部。
-5. 生成、验证、打包和启动属于同一个交付流程。
+1. Character identity takes priority over pose exaggeration.
+2. Equal canvas dimensions do not imply equal visual size; audit the actual silhouette and visual mass.
+3. Remove only tiny, unambiguous alpha fragments automatically. Regenerate anything that may be a tail, ear, wing, or limb.
+4. Use complete character frames for directional tracking on flat PNG art. Rotate a separate head only when the source is a genuine rig with authored overlap, masks, and pivots.
+5. Generation, validation, packaging, and launch are one delivery workflow.
 
 ## Requirements
 
-- Python 3 and Pillow；
-- 可接收参考图的图像生成能力；
-- 构建桌面运行时需要 Node.js 和 npm；
-- Electron 模板依赖版本记录在 `assets/electron-template/package.json`。
+- Python 3 and Pillow;
+- an image-generation capability that accepts reference images;
+- Node.js and npm when building the Electron desktop runtime;
+- Electron template versions are pinned in `assets/electron-template/package.json`.
 
 ## Provenance
 
-精灵动画方法基于 MIT 许可的 [promptwhisper/sprite-generator](https://github.com/promptwhisper/sprite-generator) 改编。具体来源、固定提交和复用范围见 [provenance.md](references/provenance.md)，上游许可见 [UPSTREAM_LICENSE.txt](references/UPSTREAM_LICENSE.txt)。
+The sprite-animation methods are adapted from the MIT-licensed [promptwhisper/sprite-generator](https://github.com/promptwhisper/sprite-generator). See [provenance.md](references/provenance.md) for the pinned source commit and adaptation scope, and [UPSTREAM_LICENSE.txt](references/UPSTREAM_LICENSE.txt) for the upstream license.
